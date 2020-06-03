@@ -10,7 +10,6 @@ class ClassReader:
         self.__extract_all_variable()
 
     def __extract_all_variable(self):
-        # print("dir(self.obj) = {}".format(dir(self.obj)))
         for var in dir(self.obj):
             if var[:2] == "__":
                 # Private function
@@ -21,7 +20,6 @@ class ClassReader:
             else:
                 # We find a variable
                 self.var_list.update({"{}".format(var): getattr(self.obj, var)})
-                # print("var = {}".format(var))
 
     def return_variable(self):
         return self.var_list
