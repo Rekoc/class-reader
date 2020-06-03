@@ -3,6 +3,7 @@
 ### Basic Usage
 
 After downloading, simply import the ClassReader, instance a ClassReader and send it your class you want to read or debug and call the appropriate function.
+**It is working with both Python 2 and 3.**
 
 ### Example
 ```
