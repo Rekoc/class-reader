@@ -1,6 +1,16 @@
 from datetime import datetime
 
 
+class ClassReaderException(Exception):
+    def __init__(self, *args, **kwargs):
+        Exception.__init__(self, *args, **kwargs)
+
+
+class FileError(ClassReaderException):
+    def __init__(self, *args, **kwargs):
+        ClassReaderException.__init__(self, "Wrong method or path.")
+
+
 class ClassReader:
     def __init__(self, obj, **kwargs):
         self.obj = obj
@@ -26,7 +36,7 @@ class ClassReader:
 
     def save_on_file(self, path, method='a'):
         if not method in ['a', 'w', 'r+', 'a+', 'w+'] or len(path) == 0:
-            return None
+            raise FileError
         with open(path, method) as f:
             f.write("________________________________________\n")
             f.write("Class: {}\n".format(self.obj))
