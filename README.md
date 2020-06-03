@@ -2,7 +2,44 @@
 
 ### Basic Usage
 
-After downloading, simply edit the HTML, CSS and Python files included with the template in your favorite text editor to make changes. These are the only files you need to worry about, you can ignore everything else! To preview the changes you make to the code, you need to follow this [Tutorial](https://docs.djangoproject.com/en/2.1/ref/django-admin/) and open the localhost address in your web browser (should be 127.0.0.1:8000 by default).
+After downloading, simply import the ClassReader, instance a ClassReader and send it your class you want to read or debug and call the appropriate function.
+
+### Example
+
+from classreader import ClassReader
+
+
+class ToRead:
+    arg1 = ['ok', 52, "hkgjsdfgjds gj ndjknhrtuk  4553", {1: 12569, 'ok': 'alex'}, [5], 125.3, None]
+    arg2 = None
+    arg3 = '1'
+    arg4 = 458723316
+    arg5 = "OKUFHJY HGEZJYFB hjrdbg yjdrhbsj yugbdjs gb"
+    arg6 = 6.51
+
+    def __init__(self, **kwargs):
+        # print(kwargs)
+        pass
+
+    def func_one(self):
+        pass
+
+    def func_two(self):
+        pass
+
+    def __str__(self):
+        return "ToRead Object"
+
+
+if __name__ == "__main__":
+    kwargs = {"arg1": 1, "arg2": 2, "arg3": 3, "arg4": 4}
+    to_read = ToRead()
+    # print(to_read.__dict__)
+    obj = ClassReader(obj = to_read, haha= kwargs)
+    print(obj.return_variable())
+    obj.save_on_file('./ok.txt', 'a')
+    # print(obj.__dict__)
+    del obj, to_read
 
 ## Bugs and Issues
 
