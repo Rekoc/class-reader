@@ -11,6 +11,11 @@ class FileError(ClassReaderException):
         ClassReaderException.__init__(self, "Wrong method or path.")
 
 
+class VarTypeError(ClassReaderException):
+    def __init__(self, *args, **kwargs):
+        ClassReaderException.__init__(self, "Wrong variable type.")
+
+
 class ClassReader:
     def __init__(self, obj, **kwargs):
         self.obj = obj
@@ -31,8 +36,98 @@ class ClassReader:
                 # We find a variable
                 self.var_list.update({"{}".format(var): getattr(self.obj, var)})
 
-    def return_variable(self):
+    def __get_str_variable(self):
+        ret_list = []
+        for var_name, var in self.var_list.items():
+            if isinstance(var, str) or isinstance(var, basestring):
+                ret_list.append({var_name: var})
+        return ret_list
+
+    def __get_int_variable(self):
+        ret_list = []
+        for var_name, var in self.var_list.items():
+            if isinstance(var, int) or isinstance(var, float) \
+                or isinstance(var, long) or isinstance(var, complex):
+                ret_list.append({var_name: var})
+        return ret_list
+
+    def __get_callable_variable(self):
+        ret_list = []
+        for var_name, var in self.var_list.items():
+            if callable(var):
+                ret_list.append({var_name: var})
+        return ret_list
+
+    def __get_list_variable(self):
+        ret_list = []
+        for var_name, var in self.var_list.items():
+            if isinstance(var, list):
+                ret_list.append({var_name: var})
+        return ret_list
+
+    def __get_dict_variable(self):
+        ret_list = []
+        for var_name, var in self.var_list.items():
+            if isinstance(var, dict):
+                ret_list.append({var_name: var})
+        return ret_list
+
+    def __get_obj_variable(self):
+        ret_list = []
+        for var_name, var in self.var_list.items():
+            if isinstance(var, object):
+                ret_list.append({var_name: var})
+        return ret_list
+
+    def __get_tuple_variable(self):
+        ret_list = []
+        for var_name, var in self.var_list.items():
+            if isinstance(var, tuple):
+                ret_list.append({var_name: var})
+        return ret_list
+
+    def __get_class_variable(self, obj):
+        ret_list = []
+        for var_name, var in self.var_list.items():
+            if isinstance(var, obj):
+                ret_list.append({var_name: var})
+        return ret_list
+
+    def get_all_variable(self):
         return self.var_list
+
+    def get_variable_by_type(self, var_type, obj=None):
+        """
+            obj: class you want to look for
+            var_type: integer
+                1 --> string
+                2 --> integer, float, complex, long
+                3 --> callable (dict, class, function, list)
+                4 --> list
+                5 --> dictionnary
+                6 --> object (list, dict, None, class, ...)
+                7 --> tuple
+                8 --> class (you need to provide a class in the 'obj' parameter)
+        """
+        if var_type == 1:
+            return self.__get_str_variable()
+        elif var_type == 2:
+            return self.__get_int_variable()
+        elif var_type == 3:
+            return self.__get_callable_variable()
+        elif var_type == 4:
+            return self.__get_list_variable()
+        elif var_type == 5:
+            return self.__get_dict_variable()
+        elif var_type == 6:
+            return self.__get_obj_variable()
+        elif var_type == 7:
+            return self.__get_tuple_variable()
+        elif var_type == 8:
+            return self.__get_class_variable(obj)
+        else:
+            raise VarTypeError
+
 
     def save_on_file(self, path, method='a'):
         if not method in ['a', 'w', 'r+', 'a+', 'w+'] or len(path) == 0:
