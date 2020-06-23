@@ -21,7 +21,7 @@ class ClassReader:
         self.obj = obj
         self.option = kwargs
         self.__dict__.update(kwargs)
-        self.var_list = {}
+        self.var_dict = {}
         self.__extract_all_variable()
 
     def __extract_all_variable(self):
@@ -34,18 +34,18 @@ class ClassReader:
                 continue
             else:
                 # We find a variable
-                self.var_list.update({"{}".format(var): getattr(self.obj, var)})
+                self.var_dict.update({"{}".format(var): getattr(self.obj, var)})
 
     def __get_str_variable(self):
         ret_list = []
-        for var_name, var in self.var_list.items():
+        for var_name, var in self.var_dict.items():
             if isinstance(var, str) or isinstance(var, basestring):
                 ret_list.append({var_name: var})
         return ret_list
 
     def __get_int_variable(self):
         ret_list = []
-        for var_name, var in self.var_list.items():
+        for var_name, var in self.var_dict.items():
             if isinstance(var, int) or isinstance(var, float) \
                 or isinstance(var, long) or isinstance(var, complex):
                 ret_list.append({var_name: var})
@@ -53,48 +53,48 @@ class ClassReader:
 
     def __get_callable_variable(self):
         ret_list = []
-        for var_name, var in self.var_list.items():
+        for var_name, var in self.var_dict.items():
             if callable(var):
                 ret_list.append({var_name: var})
         return ret_list
 
     def __get_list_variable(self):
         ret_list = []
-        for var_name, var in self.var_list.items():
+        for var_name, var in self.var_dict.items():
             if isinstance(var, list):
                 ret_list.append({var_name: var})
         return ret_list
 
     def __get_dict_variable(self):
         ret_list = []
-        for var_name, var in self.var_list.items():
+        for var_name, var in self.var_dict.items():
             if isinstance(var, dict):
                 ret_list.append({var_name: var})
         return ret_list
 
     def __get_obj_variable(self):
         ret_list = []
-        for var_name, var in self.var_list.items():
+        for var_name, var in self.var_dict.items():
             if isinstance(var, object):
                 ret_list.append({var_name: var})
         return ret_list
 
     def __get_tuple_variable(self):
         ret_list = []
-        for var_name, var in self.var_list.items():
+        for var_name, var in self.var_dict.items():
             if isinstance(var, tuple):
                 ret_list.append({var_name: var})
         return ret_list
 
     def __get_class_variable(self, obj):
         ret_list = []
-        for var_name, var in self.var_list.items():
+        for var_name, var in self.var_dict.items():
             if isinstance(var, obj):
                 ret_list.append({var_name: var})
         return ret_list
 
     def get_all_variable(self):
-        return sorted(self.var_list)
+        return sorted(self.var_dict)
 
     def get_variable_by_type(self, var_type, obj=None):
         """
@@ -136,7 +136,7 @@ class ClassReader:
             f.write("________________________________________\n")
             f.write("Class: {}\n".format(self.obj))
             f.write("{}\n".format(datetime.now()))
-            for var_name, var in sorted(self.var_list.items()):
+            for var_name, var in sorted(self.var_dict.items()):
                 f.write("\t{}\t\t--->\t{}\n".format(var_name, var))
             f.write("________________________________________\n")
 
