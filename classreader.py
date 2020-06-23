@@ -138,7 +138,13 @@ class ClassReader:
             raise VarTypeError
 
 
-    def save_on_file(self, path, method='a'):
+    def save_on_file(self, path, method='a', padding_truncate=22):
+        """
+            path: string who contains the path of your file
+            method: character method to create your log file
+            padding_truncate: integer, number of character to truncate your variable name
+                but also the padding of your variables name, by default 22
+        """
         if not method in ['a', 'w', 'r+', 'a+', 'w+'] or len(path) == 0:
             raise FileError
         with open(path, method) as f:
@@ -146,7 +152,7 @@ class ClassReader:
             f.write("Class: {}\n".format(self.obj))
             f.write("{}\n".format(datetime.now()))
             for var_name, var in sorted(self.var_dict.items()):
-                f.write("\t{}\t\t--->\t{}\n".format(var_name, var))
+                f.write("\t{:.<{}.{}} --->\t{}\n".format(var_name, padding_truncate, padding_truncate, var))
             f.write("________________________________________\n")
 
     def __str__(self):
