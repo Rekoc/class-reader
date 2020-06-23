@@ -93,11 +93,23 @@ class ClassReader:
                 ret_list.append({var_name: var})
         return ret_list
 
+    def gav(self):
+        """
+            Simply call self.get_all_variable(), just a shorter name for lasy dev :-)
+        """
+        return self.get_all_variable()
+
     def get_all_variable(self):
         """
             Return ONLY variables name sorted.
         """
         return sorted(self.var_dict, key=lambda x:x.lower())
+
+    def gavav(self):
+        """
+            Simply call self.get_all_variable_and_value(), just a shorter name for lasy dev :-)
+        """
+        return self.get_all_variable_and_value()
 
     def get_all_variable_and_value(self):
         """
@@ -137,6 +149,11 @@ class ClassReader:
         else:
             raise VarTypeError
 
+    def sof(self, path, method='a', padding_truncate=22):
+        """
+            Simply call self.save_on_file(), just a shorter name for lasy dev :-)
+        """
+        self.save_on_file(path, method, padding_truncate)
 
     def save_on_file(self, path, method='a', padding_truncate=22):
         """
