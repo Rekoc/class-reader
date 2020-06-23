@@ -94,7 +94,7 @@ class ClassReader:
         return ret_list
 
     def get_all_variable(self):
-        return self.var_list
+        return sorted(self.var_list)
 
     def get_variable_by_type(self, var_type, obj=None):
         """
@@ -136,7 +136,7 @@ class ClassReader:
             f.write("________________________________________\n")
             f.write("Class: {}\n".format(self.obj))
             f.write("{}\n".format(datetime.now()))
-            for var_name, var in self.var_list.items():
+            for var_name, var in sorted(self.var_list.items()):
                 f.write("\t{}\t\t--->\t{}\n".format(var_name, var))
             f.write("________________________________________\n")
 
