@@ -94,7 +94,16 @@ class ClassReader:
         return ret_list
 
     def get_all_variable(self):
-        return sorted(self.var_dict)
+        """
+            Return ONLY variables name sorted.
+        """
+        return sorted(self.var_dict, key=lambda x:x.lower())
+
+    def get_all_variable_and_value(self):
+        """
+            Return variables and values name non-sorted.
+        """
+        return self.var_dict
 
     def get_variable_by_type(self, var_type, obj=None):
         """
