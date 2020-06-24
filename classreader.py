@@ -1,6 +1,11 @@
 from datetime import datetime
 
 
+# CONST VALUE
+SNAPSHOT = "snapshot"
+OPTION_LIST = [SNAPSHOT]
+
+
 class ClassReaderException(Exception):
     def __init__(self, *args, **kwargs):
         Exception.__init__(self, *args, **kwargs)
@@ -20,11 +25,15 @@ class ClassReader:
     def __init__(self, obj, **kwargs):
         self.obj = obj
         self.option = kwargs
+        self.snapshot_dict = {}
         self.__dict__.update(kwargs)
         self.var_dict = {}
         self.__extract_all_variable()
 
-    def __extract_all_variable(self):
+    def __extract_all_variable(self, obj=None):
+        if obj is not None:
+            # Extract variable and value from the obj we sent to the function
+            self.obj = obj
         for var in dir(self.obj):
             if var[:2] == "__":
                 # Private function
@@ -35,6 +44,12 @@ class ClassReader:
             else:
                 # We find a variable
                 self.var_dict.update({"{}".format(var): getattr(self.obj, var)})
+        if obj is not None:
+            # Extract variable and value from the obj we sent to the function
+            snapshot = {}
+            for var_name, var in self.var_dict.items():
+                snapshot.update({var_name: var})
+            return snapshot
 
     def __get_str_variable(self):
         ret_list = []
@@ -171,6 +186,42 @@ class ClassReader:
             for var_name, var in sorted(self.var_dict.items()):
                 f.write("\t{:.<{}.{}} --->\t{}\n".format(var_name, padding_truncate, padding_truncate, var))
             f.write("________________________________________\n")
+
+    def cs(self, obj):
+        self.catch_snapshot(obj)
+
+    def catch_snapshot(self, obj):
+        """
+            Catch the first obj to make a diff later on
+        """
+        self.snapshot_dict.update({len(self.snapshot_dict): self.__extract_all_variable(obj)})
+
+    def mad(self):
+        return self.make_a_diff()
+
+    def make_a_diff(self):
+        """
+            Return a dict with all diff inside
+        """
+        if not len(self.snapshot_dict) >= 2:
+            # We don't have enough snapshot to make a diff
+            print("Error: Not enough snapshot to make a diff.")
+            return None
+        diff = {}
+        var_snapshot_one = self.snapshot_dict[0]
+        var_snapshot_two = self.snapshot_dict[1]
+        for var_name, var in var_snapshot_one.items():
+            if var_name in var_snapshot_two.keys():
+                # The variable exist in the second snapshot
+                if var == var_snapshot_two[var_name]:
+                    # Same value, no diff then
+                    continue
+                else:
+                    # Not the same value, we find a diff!
+                    diff.update({"{}".format(var_name): [var, var_snapshot_two[var_name]]})
+        # Delete both snapshot
+        del self.snapshot_dict[0], self.snapshot_dict[1]
+        return diff
 
     def __str__(self):
         return "ClassReader"
